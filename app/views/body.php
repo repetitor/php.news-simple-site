@@ -1,0 +1,2 @@
+<?php echo $p1; ?>
+<?php echo $p2; ?>
