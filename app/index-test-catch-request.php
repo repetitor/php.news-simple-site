@@ -19,11 +19,17 @@ const TYPE_RESPONSE_DIV = 'div';
 //}
 $typeResponse = $_GET['get'] ?? TYPE_RESPONSE_JSON;
 
-$inputContents = json_decode(file_get_contents('php://input'), true);
-$apiInput = (isset($inputContents['get-from-body-raw']) && $inputContents['get-from-body-raw'] == 'postman wants json');
+// may be return json - a)
 $apiGet = ($typeResponse == TYPE_RESPONSE_JSON);
 
-if($apiInput || $apiGet){
+$inputContents = json_decode(file_get_contents('php://input'), true);
+// may be return json - b)
+$apiInput = (isset($inputContents['get-from-body-raw']) && $inputContents['get-from-body-raw'] == 'postman wants json');
+
+// may be return json - c)
+$apiFormData = (isset($_POST['get-from-body-form-data']) && $_POST['get-from-body-form-data'] == 'json');
+
+if($apiGet || $apiInput || $apiFormData){
     $typeResponse = TYPE_RESPONSE_JSON;
     header('Content-type: application/json');
 //    header("Access-Control-Allow-Origin: *");
