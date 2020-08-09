@@ -1,16 +1,28 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <title><?= $params['title']; ?></title>
-    <link rel="stylesheet" href="css/style.css">
+    <title><?= $titleTab ?></title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="main-header">
-    <h1 class="visually-hidden"><?= $params['title']; ?></h1>
-</header>
-<div class="main-content">
-    <main class="content"><?= $params['content']; ?></main>
+<div class="center">HEADER</div>
+<hr/>
+
+<!--menu-->
+<div>
+    <a href="/">Все новости</a>
+
+    <?php foreach ($categories as $category): ?>
+        <?php $uri = '?category=' . $category['id']; ?>
+        <a href="<?= $uri ?>"><?= $category['name'] ?></a>
+    <?php endforeach; ?>
 </div>
-<footer class="main-footer"> Дневник наблюдения за погодой. Все права защищены</footer>
+
+<div>
+    <?= $content ?? '' ?>
+</div>
+
+<hr/>
+<div class="center">FOOTER</div>
 </body>
 </html>

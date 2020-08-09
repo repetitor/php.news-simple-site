@@ -1,6 +1,8 @@
 /vendor
 .env
 
+app/Env.php
+
 # Editor directories and files
 .idea
 .vscode

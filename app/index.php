@@ -1,30 +1,14 @@
 <?php
+//header("Access-Control-Allow-Origin: *");
 
-include_once 'helper.php';
+require_once 'Env.php';
+require_once 'RequestResponse.php';
+require_once 'View.php';
 
-$categoryId = $_GET['category'] ?? null;
-$title = isset($_GET['category']) ? getCategoryName($categoryId) : 'Все новости';
+$response = (new RequestResponse())->getResponse();
 
-$currentPage = $_GET['page'] ?? 1;
-$prevPage = $currentPage - 1;
-$nextPage = $currentPage + 1;
+$view = new View();
+$div = $view->render($response['view-file-path'], $response['data']);
+$page = $view->injectInTemplate($div, Env::DEFAULT_TITLE_TAB);
 
-$uriPrevPage = '?page=' . $prevPage;
-$uriNextPage = '?page=' . $nextPage;
-
-if($categoryId){
-    $uriPrevPage .= '&category=' . $categoryId;
-    $uriNextPage .= '&category=' . $categoryId;
-}
-
-$news = getNewsList($categoryId);
-
-$content = render('views/news-list.php', [
-    'title' => $title,
-    'isAuthenticated' => isAuthenticated(),
-    'news' => $news,
-    'uriPrevPage' => ($prevPage != 0) ? $uriPrevPage : null,
-    'uriNextPage' => $uriNextPage,
-]);
-
-echo buildPage($content, $title);
+echo $page;

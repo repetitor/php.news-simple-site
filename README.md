@@ -1,3 +1,3 @@
 # php.news-simple-site
 
-cp .env.example .env
+cp app/Env.example.php app/Env.php
