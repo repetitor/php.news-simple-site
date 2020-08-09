@@ -20,7 +20,7 @@ const TYPE_RESPONSE_DIV = 'div';
 $typeResponse = $_GET['get'] ?? TYPE_RESPONSE_JSON;
 
 $inputContents = json_decode(file_get_contents('php://input'), true);
-$apiInput = isset($inputContents['api']);
+$apiInput = (isset($inputContents['get-from-body-raw']) && $inputContents['get-from-body-raw'] == 'postman wants json');
 $apiGet = ($typeResponse == TYPE_RESPONSE_JSON);
 
 if($apiInput || $apiGet){
