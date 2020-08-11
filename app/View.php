@@ -16,11 +16,20 @@ class View
         return ob_get_clean();
     }
 
-    public function injectInTemplate($content = null, $titleTab = null)
+//    public function injectInTemplate($content = null, $titleTab = null, $hasPermissionChange = false)
+    public function injectInTemplate($content = null, $params = [])
     {
-        return $this->render(Env::TEMPLATE_PATH, [
-            'titleTab' => $titleTab,
-            'categories' => News::getCategories(),
+//        $titleTab = $params['title-tab'] ?? null;
+//        $authenticated = $params['authenticated'] ?? false;
+
+        return $this->render('views/templates/' . Env::TEMPLATE_PATH, [
+            'titleTab' => $params['title-tab'],
+            'loginLogoutForm' => $params['login-logout-form'],
+//            'loginLogoutForm' => $this->render('views/auth/loginLogoutForm.php', [
+//                'authenticated' => $params['authenticated'] ?? false,
+//            ]),
+//            'categories' => News::getCategories(),
+            'categories' => $params['categories'],
             'content' => $content,
         ]);
     }

@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Env.php';
+require_once 'Helper.php';
 require_once 'RequestResponse.php';
 require_once 'View.php';
 
@@ -35,20 +37,43 @@ if($apiGet || $apiInput || $apiFormData){
 //    header("Access-Control-Allow-Origin: *");
 }
 
+session_start();
+
+$isAdmin = Helper::isAdmin();
+
 $response = (new RequestResponse())->getResponse();
 
 if($typeResponse == TYPE_RESPONSE_JSON){
     echo json_encode($response);
 } else {
     $view = new View();
-    $div = $view->render($response['view-file-path'], $response['data']);
+
+//    $div = $view->render($response['view-file-path'], $response['data']);
+    $content = $view->render(
+        $response['view-file-path'],
+        array_merge(
+            $response['data'],
+            ['has_permission_change' => $isAdmin]
+        )
+    );
 
     if($typeResponse == TYPE_RESPONSE_DIV){
-        echo $div;
+        echo $content;
     }
 
     if($typeResponse == TYPE_RESPONSE_PAGE){
-        $page = $view->injectInTemplate($div, 'test-catch-request');
+//        $page = $view->injectInTemplate($div, 'test-catch-request');
+//        echo $page;
+        $form = $isAdmin ? 'logout-form.php' : 'login-form.php';
+        $renderLoginLogoutForm = $view->render('views/auth/' . $form);
+
+        $page = $view->injectInTemplate($content, [
+            'title-tab' => $response['title-tab'] ?? Env::DEFAULT_TITLE_TAB,
+            'login-logout-form' => $renderLoginLogoutForm,
+            'categories' => $response['categories'] ?? null,
+            'authenticated' => $isAdmin,
+        ]);
+
         echo $page;
     }
 }

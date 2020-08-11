@@ -8,6 +8,10 @@
 <div class="center">HEADER</div>
 <hr/>
 
+<div class="center">
+    <?= $loginLogoutForm ?>
+</div>
+
 <!--menu-->
 <div>
     <a href="/">Все новости</a>
