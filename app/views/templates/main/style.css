@@ -1,0 +1,18 @@
+html, body{ height:100%; margin:0; }
+header{ height:50px; background:lightcyan; }
+footer{ height:50px; background:PapayaWhip; margin-top:auto; }
+
+body{
+    display:flex;
+    flex-direction:column;
+    background: linear-gradient(to top, #fefcea, #f1da36);
+    padding: 10px;
+    border: 1px solid #333;
+    text-align:center;
+}
+
+.brd {
+    border: 4px double black; /* Параметры границы */
+    background: #fc3; /* Цвет фона */
+    padding: 10px; /* Поля вокруг текста */
+}

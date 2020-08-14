@@ -34,6 +34,14 @@ class Database
         return self::connect()->query($statement);
     }
 
+    public static function insertGetLastId($statement)
+    {
+        $conn = self::connect();
+        $conn->query($statement)->execute();
+
+        return $conn->lastInsertId();
+    }
+
     public static function getAllFromTable($table)
     {
         $PDOStatement = self::query("SELECT * FROM $table ORDER BY id ASC");

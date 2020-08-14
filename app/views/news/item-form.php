@@ -1,20 +1,24 @@
 <h1><?= $title ?? '' ?></h1>
 
-<form method="post" action="<?= $uri ?>">
-    <input type="hidden" name="action" value="<?= $action ?>">
+<div class="brd">
+<form method="post" action="<?= $uri_action ?>">
+    <input type="hidden" name="<?= $action ?>">
 
     <div>Title: <input type="text" name="name" value="<?= $title ?? '' ?>"></div>
 
-    <div>
+    <br><br>
+    <div class="center">
         Author:
-        <select name="author_id">
+        <select name="author_id" class="center">
             <?php foreach ($authors as $option): ?>
                 <?php $isbeforeSelected = ($option['id'] == $author_id) ? "selected" : '' ?>
                 <option value="<?= $option['id'] ?>" <?= $isbeforeSelected ?>><?= $option['name'] ?></option>
             <?php endforeach; ?>
         </select>
+        <br>
     </div>
 
+    <br><br>
     <div>
         Category:
         <select name="category_id">
@@ -23,11 +27,17 @@
                 <option value="<?= $option['id'] ?>"><?= $option['name'] ?></option>
             <?php endforeach; ?>
         </select>
+        <br>
     </div>
 
+    <br><br>
     <div>
-        Описание: <textarea name="description"><?= $description ?? '' ?></textarea>
+        Описание:
+        <br>
+        <textarea name="description" cols="70" rows="10"><?= $description ?? '' ?></textarea>
     </div>
 
+    <br>
     <input type="submit" value="Save">
 </form>
+</div>

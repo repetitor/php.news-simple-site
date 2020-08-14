@@ -24,8 +24,8 @@ class NewsController
 
         return [
             'title-tab' => 'Новости - Список',
-            'view-file-path' => $this->views . '/index.php',
-            'categories' => News::getCategories(),
+            'view-file-path' => $this->views . '/list.php',
+            'categories' => Category::getAll(),
             'data' => $newsListPagination,
         ];
     }
@@ -33,12 +33,11 @@ class NewsController
     public function show($id)
     {
         $item = $this->news->getItem($id);
-        $item['uri'] = '?news&id=' . $id;
 
         return [
             'title-tab' => $item['title'],
-            'view-file-path' => $this->views . '/item-read.php',
-            'categories' => News::getCategories(),
+            'view-file-path' => $this->views . '/item.php',
+            'categories' => Category::getAll(),
             'data' => $item,
         ];
     }
@@ -47,50 +46,36 @@ class NewsController
     {
         if($id){
             $data = $this->news->getItem($id);
-            $data['uri'] = '?news&id=' . $id;
+            $data['uri_action'] = $data['uri'];
             $data['action'] = 'update';
         } else {
-            $data['uri'] = '?news';
+            $data['uri_action'] = News::URI;
             $data['action'] = 'create';
         }
+
         $data['authors'] = Author::getAll();
         $data['categories'] = Category::getAll();
 
         return [
             'title-tab' => $data['title'] ?? 'News:Create',
-            'view-file-path' => $this->views . '/item-edit.php',
-            'categories' => News::getCategories(),
+            'view-file-path' => $this->views . '/item-form.php',
+            'categories' => Category::getAll(),
             'data' => $data,
         ];
     }
 
     public function create($params)
     {
-        $this->news->create($params);
+        $id = $this->news->create($params);
 
-//        $item = $this->news->getItem($id);
-
-//        return [
-//            'title-tab' => $item['title'],
-//            'view-file-path' => $this->views . '/item-read.php',
-//            'categories' => News::getCategories(),
-//            'data' => $item,
-//        ];
-        return $this->index();
+        return $this->show($id);
     }
 
     public function update($id, $params)
     {
         $this->news->update($id, $params);
 
-        $item = $this->news->getItem($id);
-
-        return [
-            'title-tab' => $item['title'],
-            'view-file-path' => $this->views . '/item-read.php',
-            'categories' => News::getCategories(),
-            'data' => $item,
-        ];
+        return $this->show($id);
     }
 
     public function delete($id)

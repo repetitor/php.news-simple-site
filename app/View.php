@@ -1,7 +1,6 @@
 <?php
 
 require_once 'Env.php';
-require_once 'News.php';
 
 class View
 {
@@ -16,21 +15,18 @@ class View
         return ob_get_clean();
     }
 
-//    public function injectInTemplate($content = null, $titleTab = null, $hasPermissionChange = false)
     public function injectInTemplate($content = null, $params = [])
     {
-//        $titleTab = $params['title-tab'] ?? null;
-//        $authenticated = $params['authenticated'] ?? false;
+        return $this->render(Env::TEMPLATE_PATH, [
+            'content_rendered' => $content,
 
-        return $this->render('views/templates/' . Env::TEMPLATE_PATH, [
-            'titleTab' => $params['title-tab'],
-            'loginLogoutForm' => $params['login-logout-form'],
-//            'loginLogoutForm' => $this->render('views/auth/loginLogoutForm.php', [
-//                'authenticated' => $params['authenticated'] ?? false,
-//            ]),
-//            'categories' => News::getCategories(),
-            'categories' => $params['categories'],
-            'content' => $content,
+            'can_auth' => $params['can-auth'] ?? null,
+            'is_admin' => $params['is-admin'] ?? false,
+
+            'title_tab' => $params['title-tab'] ?? Env::DEFAULT_TITLE_TAB,
+            'categories' => $params['categories'] ?? null,
+
+            'link_css' => Env::LINK_CSS,
         ]);
     }
 }

@@ -12,35 +12,41 @@
 </div>
 
 <!--button create-->
-<?php if ($has_permission_change): ?>
-    <a href="<?= $uri_create ?>"><button>Добавить</button></a>
+<?php if ($is_admin): ?>
+    <a href="<?= $uri_create ?>"><button>Добавить новость</button></a>
 <?php endif; ?>
 
 <!--news-->
-<table rules="all">
+<div class="brd">
+<table rules="all" align="center" border="1">
     <tr>
         <th>№</th>
 
-        <?php if ($has_permission_change): ?>
-        <th>Действие</th>
+        <?php if ($is_admin): ?>
+        <th width="150">Действие</th>
         <?php endif; ?>
 
-        <th>Заголовок</th>
-        <th>Автор</th>
-        <th>Категория</th>
-        <th>Текст новости</th>
-        <th width="100">Дата добавления</th>
-        <th width="100">Дата редактирования (последнего)</th>
+        <th width="250">Заголовок</th>
+        <th width="100">Автор</th>
+        <th width="100">Категория</th>
+        <th width="300">Текст новости</th>
+        <th width="200">Дата добавления</th>
+        <th width="200">Дата редактирования (последнего)</th>
     </tr>
 
     <?php foreach ($news as $row): ?>
     <tr>
         <td><?= $row['id'] ?></td>
 
-        <?php if ($has_permission_change): ?>
+        <?php if ($is_admin): ?>
         <td>
             <a href="<?= $row['uri_edit'] ?>"><button>Редактировать</button></a>
-            <a href="<?= $row['uri_delete'] ?>"><button>DELETE</button></a>
+
+            <form method="post" action="<?= $uri_parent ?>">
+                <input type="hidden" name="delete">
+                <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                <input type="submit" value="Удалить">
+            </form>
         </td>
         <?php endif; ?>
 
@@ -55,6 +61,7 @@
     <?php endforeach; ?>
 
 </table>
+</div>
 
 <!--pagination-->
 <div class="center">

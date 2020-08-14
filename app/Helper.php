@@ -4,35 +4,6 @@ require_once 'Env.php';
 
 class Helper
 {
-    /**
-     * connect to database || fail
-     *
-     * @return PDO|string
-     */
-    public static function connectDatabase()
-    {
-        $servername = Env::DB_SERVERNAME;
-        $username = Env::DB_USERNAME;
-        $password = Env::DB_PASSWORD;
-        $dbname = Env::DB_NAME;
-
-        try {
-            $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-
-            // set the PDO error mode to exception
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-            return $conn;
-        } catch(PDOException $e) {
-            return "Connection failed: " . $e->getMessage();
-        }
-    }
-
-    public function queryDatabase($statement)
-    {
-        return self::connectDatabase()->query($statement);
-    }
-
     public static function isAdmin(){
         $login = 'admin';
         $password = 'password';
@@ -77,7 +48,21 @@ class Helper
     public static function trimText($text, $maxLength){
         $textMaxLength = substr($text, 0, $maxLength);
         $textWithoutSigns = rtrim($textMaxLength, "!,.-");
+//        $textTrimLastSpace = substr($textWithoutSigns, 0, strrpos($textWithoutSigns, ' '));
 
-        return substr($textWithoutSigns, 0, strrpos($textWithoutSigns, ' ')) . '...';
+        return $textWithoutSigns . '...';
+//        return $textTrimLastSpace . '...';
+    }
+
+    public static function fromUtcToLocalTime($utcTime, $format='Y-m-d H:i:s')
+    {
+        $datetime = date_create($utcTime, timezone_open('UTC'));
+//        $tz = date_timezone_get($datetime);
+//        echo timezone_name_get($tz);
+//        echo $datetime->format('H:i');
+
+        date_timezone_set($datetime, timezone_open('Europe/Minsk'));
+
+        return $datetime->format($format);
     }
 }

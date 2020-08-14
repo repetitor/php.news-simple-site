@@ -7,25 +7,14 @@ require_once 'Database.php';
 
 class News
 {
-    const URI = '?news';
-
-    public function test()
-    {
-        return Env::NEWS_LIMIT_PER_PAGE;
-    }
-
-    public static function getCategories()
-    {
-        return Database::query('SELECT * FROM categories ORDER BY id ASC');
-    }
+    const URI = Env::URI . '?news';
 
     /**
      * @param array $params
      *
     i.g.: $params = [
         'category' => null,
-        'page' => 1,
-        'hasPermissionChange' => false,
+        'page' => 2,
     ]
      *
      * @return array
@@ -33,19 +22,14 @@ class News
     public function getNewsListPagination($params = []){
         $categoryId = $params['category'] ?? null;
         $currentPage = $params['page'] ?? 1;
-        $limitPerPage = Env::NEWS_LIMIT_PER_PAGE; // How many items to list per page
-
-        if(isset($params['hasPermissionChange']) && $params['hasPermissionChange'] == true){
-            $hasPermissionChange = true;
-        } else {
-            $hasPermissionChange = false;
-        }
+        $limitPerPage = Env::NEWS_LIMIT_PER_PAGE; // How many items to list per current page
 
         $startQueryPage = ($currentPage != 1) ? ($currentPage-1) : null;
         $finishQueryPage = $currentPage + 1;
 
-        $offset = $startQueryPage ? (($startQueryPage - 1) * $limitPerPage) : 0;
+        $offset = $startQueryPage ? (($startQueryPage - 1) * $limitPerPage) : 0; // How many items to skip
 
+        // How many items to all query pages
         $limit = $startQueryPage ? ($limitPerPage * 3) : ($limitPerPage * 2);
 
         $sql = 'SELECT 
@@ -74,9 +58,13 @@ class News
         foreach ($news as $item){
             $item['title'] = Helper::trimText($item['title'], 30);
             $item['description'] = Helper::trimText($item['description'], 150);
+            $item['created_at'] = Helper::fromUtcToLocalTime($item['created_at']);
+            $item['updated_at'] = Helper::fromUtcToLocalTime($item['updated_at']);
+
             $item['uri'] = '?news&id=' . $item['id'];
-            $item['uri_edit'] = '?news&id=' . $item['id'] . '&action=edit';
-            $item['uri_delete'] = '?news&id=' . $item['id'] . '&action=delete';
+            $item['id'] = $item['id'];
+            $item['uri_edit'] = '?news&id=' . $item['id'] . '&edit';
+//            $item['uri_delete'] = '?news&id=' . $item['id'] . '&action=delete';
 
             array_push($newsUpdated, $item);
         }
@@ -106,49 +94,55 @@ class News
 
         return [
             'news' => $newsCurrentPage,
-            'uri_create' => self::URI . '&action=create',
+            'uri_parent' => self::URI,
+            'uri_create' => self::URI . '&create',
             'uriPrevPage' => $uriPrevPage,
             'uriNextPage' => $uriNextPage,
-            'hasPermissionChange' => $hasPermissionChange,
         ];
     }
 
     public function getItem($id){
         $sql = 'SELECT 
-        news.name AS title, 
-        news.author_id, 
-        authors.name AS author,
-        categories.name AS category,
-        news.category_id, 
-        news.description,
-        news.created_at,
-        news.updated_at
-        FROM news 
-        LEFT JOIN authors ON news.author_id = authors.id
-        LEFT JOIN categories ON news.category_id = categories.id 
-        WHERE news.id = ' . $id . ' 
-        LIMIT 1
-    ';
+            news.name AS title, 
+            news.author_id, 
+            authors.name AS author,
+            categories.name AS category,
+            news.category_id, 
+            news.description,
+            news.created_at,
+            news.updated_at
+            FROM news 
+            LEFT JOIN authors ON news.author_id = authors.id
+            LEFT JOIN categories ON news.category_id = categories.id 
+            WHERE news.id = ' . $id . ' 
+            LIMIT 1
+        ';
 
-        return Database::query($sql)->fetch();
+        $item = Database::query($sql)->fetch();
+
+        $item['created_at'] = Helper::fromUtcToLocalTime($item['created_at']);
+        $item['updated_at'] = Helper::fromUtcToLocalTime($item['updated_at']);
+        $item['uri'] = self::URI . '&id=' . $id;
+        $item['uri_edit'] = self::URI . '&id=' . $id . '&edit';
+        $item['uri_parent'] = self::URI;
+        $item['id'] = $id;
+
+        return $item;
     }
 
     public function create($params){
-//        $sql = 'INSERT INTO news (`name`, `description`, `author_id`, `category_id`) VALUES (
-//            "' . $params['name'] . '",
-//            "' . $params['description'] . '",
-//            "' . $params['author_id'] . '",
-//            "' . $params['category_id'] . '",
-//)';
         $statement = 'INSERT INTO news (`name`, `description`, `author_id`, `category_id`) VALUES (
             "' . $params['name'] . '",
             "' . $params['description'] . '",
             "' . $params['author_id'] . '",
             "' . $params['category_id'] . '"
-)';
-        $PDOStatement = Database::query($statement);
+        )';
+//        $PDOStatement = Database::query($statement);
+//        Database::insertGetLastId($statement);
+        return Database::insertGetLastId($statement);
 
 //        return $this->getNewsListPagination();
+//        $date = date_create_from_format('Y-m-d H:i', time());
     }
 
     public function update($id, $params){
@@ -166,6 +160,7 @@ class News
     public function delete($id){
         $sql = 'DELETE FROM news WHERE id = ' . $id . ';';
 
-        return Database::query($sql);
+//        return Database::query($sql);
+        Database::query($sql);
     }
 }

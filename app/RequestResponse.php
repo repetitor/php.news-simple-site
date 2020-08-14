@@ -17,18 +17,18 @@ class RequestResponse
             $controller = new NewsController();
 
             if(isset($_GET['id'])){
-                if(isset($_GET['action']) && $_GET['action'] == 'edit'){
+                if(isset($_GET['edit'])){
                     $this->response = $controller->edit($_GET['id']);
-                } elseif (isset($_POST['action']) && $_POST['action'] == 'update') {
+                } elseif (isset($_POST['update'])) {
                     $this->response = $controller->update($_GET['id'], $_POST);
-                } elseif (isset($_GET['action']) && $_GET['action'] == 'delete') {
-                    $this->response = $controller->delete($_GET['id']);
                 } else {
                     $this->response = $controller->show($_GET['id']);
                 }
-            } elseif (isset($_GET['action']) && $_GET['action'] == 'create') {
+            } elseif (isset($_POST['delete'])) {
+                $this->response = $controller->delete($_POST['id']);
+            } elseif (isset($_GET['create'])) {
                 $this->response = $controller->edit();
-            } elseif (isset($_POST['action']) && $_POST['action'] == 'create') {
+            } elseif (isset($_POST['create'])) {
                 $this->response = $controller->create($_POST);
             } else {
                 $this->response = $controller->index();
@@ -53,8 +53,8 @@ class RequestResponse
             'title-tab' => 'tab - Test',
             'view-file-path' => 'views/testview.php',
             'data' => [
-                'paramTest' => 'value: Test',
-                'paramTest2' => 'value2: Test2',
+                'param_test' => 'value: Test',
+                'param_test2' => 'value2: Test2',
             ],
         ];
     }
