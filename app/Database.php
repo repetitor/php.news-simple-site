@@ -37,7 +37,7 @@ class Database
     public static function insertGetLastId($statement)
     {
         $conn = self::connect();
-        $conn->query($statement)->execute();
+        $conn->query($statement);
 
         return $conn->lastInsertId();
     }

@@ -3,28 +3,21 @@
 require_once 'Env.php';
 require_once 'Helper.php';
 require_once 'RequestResponse.php';
-require_once 'View.php';
 
 session_start();
-$isAdmin = Helper::isAdmin();
+
+$helper = new Helper();
+
+$isAdmin = $helper->isAdmin();
+
 $response = (new RequestResponse())->getResponse();
+$response['content']['data']['is_admin'] = $isAdmin;
 
-$view = new View();
+$contentRendered = $helper->render($response['content']);
 
-$content = $view->render(
-    $response['view-file-path'],
-    array_merge(
-        $response['data'],
-        ['is_admin' => $isAdmin]
-    )
-);
+$response['template']['data']['is_admin'] = $isAdmin;
+$response['template']['data']['content_rendered'] = $contentRendered;
 
-$page = $view->injectInTemplate($content, [
-    'can-auth' => true,
-    'is-admin' => $isAdmin,
-
-    'title-tab' => $response['title-tab'] ?? Env::DEFAULT_TITLE_TAB,
-    'categories' => $response['categories'] ?? null,
-]);
+$page = $helper->render($response['template']);
 
 echo $page;

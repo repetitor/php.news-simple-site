@@ -1,16 +1,17 @@
 <h1>View test</h1>
 
 <p>
-    <?= $param_test ?>
+    <?= $param_test ?? '' ?>
 </p>
 
 <p>
-    <?= $param_test2 ?>
+    <?= $param_test2 ?? '' ?>
 </p>
 
 <p>
     <?php if (isset($is_admin)): ?>
         <p>is admin isset - true</p>
+        <p>is admin - <?= $is_admin ?></p>
     <?php else: ?>
         <p>is admin isset - false</p>
     <?php endif; ?>

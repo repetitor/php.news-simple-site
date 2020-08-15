@@ -4,7 +4,18 @@ require_once 'Env.php';
 
 class Helper
 {
-    public static function isAdmin(){
+    public function render($content)
+    {
+        if(isset($content['data'])){
+            extract($content['data']);
+        }
+        ob_start();
+        require $content['path'];
+
+        return ob_get_clean();
+    }
+
+    public function isAdmin(){
         $login = 'admin';
         $password = 'password';
 

@@ -27,9 +27,9 @@ class RequestResponse
             } elseif (isset($_POST['delete'])) {
                 $this->response = $controller->delete($_POST['id']);
             } elseif (isset($_GET['create'])) {
-                $this->response = $controller->edit();
-            } elseif (isset($_POST['create'])) {
-                $this->response = $controller->create($_POST);
+                $this->response = $controller->create();
+            } elseif (isset($_POST['store'])) {
+                $this->response = $controller->store($_POST);
             } else {
                 $this->response = $controller->index();
             }
@@ -50,11 +50,19 @@ class RequestResponse
     private function test()
     {
         return [
-            'title-tab' => 'tab - Test',
-            'view-file-path' => 'views/testview.php',
-            'data' => [
-                'param_test' => 'value: Test',
-                'param_test2' => 'value2: Test2',
+            'template' => [
+                'path' => 'views/templates/test/template.php',
+                'data' => [
+                    'title_tab' => 'tab - Test',
+                    'link_css' => Env::LINK_MAIN_TEMPLATE_CSS,
+                ],
+            ],
+            'content' => [
+                'path' => 'views/testview.php',
+                'data' => [
+                    'param_test' => 'value: Test',
+                    'param_test2' => 'value2: Test2',
+                ],
             ],
         ];
     }

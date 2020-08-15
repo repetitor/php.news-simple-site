@@ -2,11 +2,11 @@
 
 <!--pagination-->
 <div class="center">
-    <?php if ($uriPrevPage): ?>
+    <?php if (isset($uriPrevPage)): ?>
         <a href="<?= $uriPrevPage ?>">Prev</a>
     <?php endif; ?>
 
-    <?php if ($uriNextPage): ?>
+    <?php if (isset($uriNextPage)): ?>
         <a href="<?= $uriNextPage ?>">Next</a>
     <?php endif; ?>
 </div>
@@ -65,11 +65,11 @@
 
 <!--pagination-->
 <div class="center">
-    <?php if ($uriPrevPage): ?>
+    <?php if (isset($uriPrevPage)): ?>
         <a href="<?= $uriPrevPage ?>">Prev</a>
     <?php endif; ?>
 
-    <?php if ($uriNextPage): ?>
+    <?php if (isset($uriNextPage)): ?>
         <a href="<?= $uriNextPage ?>">Next</a>
     <?php endif; ?>
 </div>
