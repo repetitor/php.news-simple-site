@@ -26,6 +26,8 @@
         <th width="150">Действие</th>
         <?php endif; ?>
 
+        <th width="250">Изображение</th>
+
         <th width="250">Заголовок</th>
         <th width="100">Автор</th>
         <th width="100">Категория</th>
@@ -49,6 +51,12 @@
             </form>
         </td>
         <?php endif; ?>
+
+        <td>
+            <?php if (isset($row['path_image'])): ?>
+                <img src="<?= $row['path_image'] ?>" width="100">
+            <?php endif; ?>
+        </td>
 
         <td><a href="<?= $row['uri'] ?>"><?= $row['title'] ?></a></td>
         <td><?= $row['author'] ?></td>

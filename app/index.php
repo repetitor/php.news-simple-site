@@ -21,3 +21,5 @@ $response['template']['data']['content_rendered'] = $contentRendered;
 $page = $helper->render($response['template']);
 
 echo $page;
+
+//echo $_SERVER['DOCUMENT_ROOT'];

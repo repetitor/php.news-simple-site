@@ -1,10 +1,15 @@
 <div class="brd">
-<h1><?= $title ?></h1>
+    <h1><?= $title ?></h1>
 
-<p>Дата создания: <?= $created_at ?></p>
-<p>Дата последнего обновления: <?= $updated_at ?></p>
-<p><?= $author ?></p>
-<pre><?= $description ?></pre>
+    <p>Дата создания: <?= $created_at ?></p>
+    <p>Дата последнего обновления: <?= $updated_at ?></p>
+    <p><?= $author ?></p>
+
+    <?php if (isset($path_image)): ?>
+        <img src="<?= $path_image ?>" width="600">
+    <?php endif; ?>
+
+    <pre><?= $description ?></pre>
 </div>
 
 <?php if ($is_admin): ?>

@@ -26,6 +26,8 @@ class RequestResponse
                 }
             } elseif (isset($_POST['delete'])) {
                 $this->response = $controller->delete($_POST['id']);
+            } elseif (isset($_POST['delete_image'])) {
+                $this->response = $controller->deleteImage($_POST['id']);
             } elseif (isset($_GET['create'])) {
                 $this->response = $controller->create();
             } elseif (isset($_POST['store'])) {

@@ -11,6 +11,7 @@ class News
 {
     const URI = Env::URI . '?news';
     const VIEWS_PATH = 'views/news';
+    const IMAGES_PATH = 'views/news/images';
     const MESSAGE_INVALID_ID = 'ID is invalid';
 
     private $template;
@@ -67,6 +68,12 @@ class News
 
             $item['uri'] = self::URI . '&id=' . $item['id'];
             $item['uri_edit'] = self::URI . '&id=' . $item['id'] . '&edit';
+
+            //image
+            $filename = self::IMAGES_PATH . '/image_' . $item['id'] . '.png';
+            if(file_exists ( $filename )){
+                $item['path_image'] = $filename;
+            }
 
             array_push($newsUpdated, $item);
         }
@@ -173,6 +180,12 @@ class News
         $item['uri_edit'] = self::URI . '&id=' . $id . '&edit';
         $item['uri_parent'] = self::URI;
 
+        //image
+        $filename = self::IMAGES_PATH . '/image_' . $id . '.png';
+        if(file_exists ( $filename )){
+            $item['path_image'] = $filename;
+        }
+
         $this->template['data']['title_tab'] = $item['title'];
 
         return [
@@ -190,6 +203,18 @@ class News
         $data['categories'] = Category::getAll();
 
         return $data;
+    }
+
+    private function storeImage($id)
+    {
+        if(isset($_FILES['image']) && $_FILES['image']['tmp_name']){
+            $uploaddir = $_SERVER['DOCUMENT_ROOT'] . '/views/news/images/';
+
+//        $uploadfile = $uploaddir . basename($_FILES['image']['name']);
+            $uploadfile = $uploaddir . 'image_' . $id . '.png';
+
+            move_uploaded_file($_FILES['image']['tmp_name'], $uploadfile);
+        }
     }
 
     public function form_store()
@@ -217,7 +242,11 @@ class News
             "' . $params['category_id'] . '"
         )';
 
-        return Database::insertGetLastId($statement);
+        $id = Database::insertGetLastId($statement);
+
+        $this->storeImage($id);
+
+        return $id;
     }
 
     public function form_update($id)
@@ -255,10 +284,22 @@ class News
             WHERE id = ' . $id . ';';
 
         Database::query($sql);
+
+        $this->storeImage($id);
     }
 
     public function delete($id){
         $sql = 'DELETE FROM news WHERE id = ' . $id . ';';
         Database::query($sql);
+
+        $this->deleteImage($id);
+    }
+
+    public function deleteImage($id)
+    {
+        $filename = self::IMAGES_PATH . '/image_' . $id . '.png';
+        if(file_exists ( $filename )){
+            unlink($filename);
+        }
     }
 }

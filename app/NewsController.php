@@ -56,4 +56,11 @@ class NewsController
 
         return $this->index();
     }
+
+    public function deleteImage($id)
+    {
+        $this->news->deleteImage($id);
+
+        return $this->show($id);
+    }
 }
