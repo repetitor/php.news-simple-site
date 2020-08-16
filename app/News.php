@@ -171,7 +171,7 @@ class News
         $item = Database::query($sql)->fetch();
 
         if(! $item){
-            return ['message' => self::MESSAGE_INVALID_ID];
+            exit(self::MESSAGE_INVALID_ID);
         }
 
         $item['created_at'] = Helper::fromUtcToLocalTime($item['created_at']);
@@ -252,10 +252,6 @@ class News
     public function form_update($id)
     {
         $item = $this->getItem($id);
-
-        if(isset($item['message']) && $item['message'] == self::MESSAGE_INVALID_ID){
-            return $item;
-        }
 
         $specialDataForm = $this->specialDataForm();
 
