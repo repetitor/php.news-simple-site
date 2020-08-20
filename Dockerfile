@@ -43,12 +43,12 @@ RUN docker-php-ext-install \
 bz2 \
 intl \
 iconv \
-bcmath \
-opcache \
-calendar \
-mbstring \
-pdo_mysql \
-zip
+#bcmath \
+#opcache \
+#calendar \
+#mbstring \
+pdo_mysql
+#zip
 
 # install composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
